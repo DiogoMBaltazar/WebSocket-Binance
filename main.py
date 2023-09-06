@@ -1,7 +1,7 @@
 import json
 import websocket
 import threading
-
+import sqlite3
 import requests
 
 def get_top_50_pairs():
