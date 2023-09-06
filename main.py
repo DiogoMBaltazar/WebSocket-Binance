@@ -33,6 +33,8 @@ def on_message(ws, message):
     conn = sqlite3.connect('crypto_data.db')
     c = conn.cursor()
 
+    print("Inserting ", open_price, "for ", symbol, " at ", timestamp)
+    print("---------------------------------------------------------")
     # Insert the data into the ohlcv table
     c.execute("INSERT INTO ohlcv (date, symbol, open, high, low, close, volume) VALUES (?, ?, ?, ?, ?, ?, ?)",
               (timestamp, symbol, open_price, high_price, low_price, close_price, volume))
@@ -46,13 +48,11 @@ def connect_to_websocket(symbol):
                                 on_message=on_message)
     ws.run_forever()
 
-# Test with BTCUSDT pair
-connect_to_websocket('btcusdt')
-
 def threaded_websocket_connection(symbol):
     thread = threading.Thread(target=connect_to_websocket, args=(symbol,))
     thread.start()
 
 top_50_pairs = get_top_50_pairs()
+print(top_50_pairs)
 for pair in top_50_pairs:
     threaded_websocket_connection(pair)
